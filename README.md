@@ -18,3 +18,4 @@ Access your project or create the project. go to IAM & Admin and go to service a
       gcp_cred_file: # add /home/credentials/gcp/credential.json
       zone: "us-central1-a"
       region: "us-central1"
+
