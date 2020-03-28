@@ -11,6 +11,20 @@
 
 
   tasks:
+   - name: create a disk 01
+     gcp_compute_disk:
+         name: 'k8s-master-01'
+         size_gb: 10
+         source_image: 'projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts'
+         zone: "{{ zone }}"
+         project: "{{ gcp_project }}"
+         auth_kind: "{{ gcp_cred_kind }}"
+         service_account_file: "{{ gcp_cred_file }}"
+         scopes:
+           - https://www.googleapis.com/auth/compute
+         state: present
+     register: disk1
+
    - name: create a disk 02
      gcp_compute_disk:
          name: 'k8s-master-02'
@@ -25,20 +39,6 @@
          state: present
      register: disk2
 
-   - name: create a disk 03
-     gcp_compute_disk:
-         name: 'k8s-master-03'
-         size_gb: 10
-         source_image: 'projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts'
-         zone: "{{ zone }}"
-         project: "{{ gcp_project }}"
-         auth_kind: "{{ gcp_cred_kind }}"
-         service_account_file: "{{ gcp_cred_file }}"
-         scopes:
-           - https://www.googleapis.com/auth/compute
-         state: present
-     register: disk3
-
    - name: create a network
      gcp_compute_network:
          name: 'default'
@@ -51,9 +51,9 @@
          state: present
      register: network
 
-   - name: create a address 02
+   - name: create a address 01
      gcp_compute_address:
-         name: 'k8s-master-02'
+         name: 'k8s-master-01'
          address_type: "EXTERNAL" 
          network_tier: "PREMIUM"
          region: "{{ region }}"
@@ -65,9 +65,9 @@
          state: present
      register: address
 
-   - name: create a address 03 
+   - name: create a address 02 
      gcp_compute_address:
-         name: 'k8s-master-03'
+         name: 'k8s-master-02'
          address_type: "EXTERNAL" 
          network_tier: "PREMIUM"
          region: "{{ region }}"
@@ -79,15 +79,15 @@
          state: present
      register: address1  
 
-   - name: create a instance 02
+   - name: create a instance 01
      gcp_compute_instance:
          state: present
-         name: k8s-master-02
+         name: k8s-master-01
          machine_type: g1-small
          disks:
            - auto_delete: true
              boot: true
-             source: "{{ disk2 }}"
+             source: "{{ disk1 }}"
          network_interfaces:
              - network: "{{ network }}"
                access_configs:
@@ -102,15 +102,15 @@
            - https://www.googleapis.com/auth/compute
      register: instance
 
-   - name: create a instance 03
+   - name: create a instance 02
      gcp_compute_instance:
          state: present
-         name: k8s-master-03
+         name: k8s-master-02
          machine_type: g1-small
          disks:
            - auto_delete: true
              boot: true
-             source: "{{ disk3 }}"
+             source: "{{ disk2 }}"
          network_interfaces:
              - network: "{{ network }}"
                access_configs:
