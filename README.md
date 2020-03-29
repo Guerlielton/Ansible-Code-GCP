@@ -1,4 +1,4 @@
-# Ansilbe-Code-GCP
+# Ansible-Code-GCP
 Fist step 
 
 Download Ansible on your compute. 
